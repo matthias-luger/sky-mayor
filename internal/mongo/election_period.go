@@ -86,3 +86,36 @@ func GetElectionPeriodByYear(year int) (*model.ElectionPeriod, error) {
 
 	return result, nil
 }
+
+func GetElectionPeriodsByTimespan(from int64, to int64) ([]*model.ElectionPeriod, error) {
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*30)
+
+	cur, err := electionPeriodCollection.Find(ctx, bson.M{
+		"$and": []bson.M{
+			{"start": bson.M{"$gte": time.Unix(from, 0)}},
+			{"end": bson.M{"$lte": time.Unix(to, 0)}},
+		},
+	})
+
+	if err != nil {
+		log.Error().Err(err).Msgf("error finding election period from %d to %d", from, to)
+		return nil, err
+	}
+
+	var resultList = []*model.ElectionPeriod{}
+
+	for cur.Next(ctx) {
+
+		var result = &model.ElectionPeriod{}
+		err := cur.Decode(result)
+		if err != nil {
+			log.Error().Err(err).Msgf("error decoding election period")
+			return nil, err
+		}
+		resultList = append(resultList, result)
+	}
+
+	log.Info().Msgf("successfully found %d election periods from %d to %d", len(resultList), from, to)
+
+	return resultList, nil
+}

@@ -14,7 +14,32 @@ func InitElectionPeriodREST() {
 	router := gin.Default()
 	router.POST("/electionPeriod", postElectionPeriod)
 	router.GET("/electionPeriod/:year", getElectionPeriodByYear)
+	router.GET("/electionPeriods/:from/:to", getElectionPeriodsByTimespan)
 	router.Run("localhost:8080")
+}
+
+func getElectionPeriodsByTimespan(c *gin.Context) {
+	fromParam := c.Param("from")
+	toParam := c.Param("to")
+
+	from, err := strconv.ParseInt(fromParam, 10, 64)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "expection param 'from' to be type int"})
+		return
+	}
+
+	to, err := strconv.ParseInt(toParam, 10, 64)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "expection param 'to' to be type int"})
+		return
+	}
+
+	electionPeriod, _ := mongo.GetElectionPeriodsByTimespan(from/1000, to/1000)
+	if electionPeriod == nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "election period not found"})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, electionPeriod)
 }
 
 func getElectionPeriodByYear(c *gin.Context) {
@@ -22,7 +47,7 @@ func getElectionPeriodByYear(c *gin.Context) {
 
 	year, err := strconv.Atoi(yearParam)
 	if err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "expection param year to be type int"})
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "expection param 'year' to be type int"})
 		return
 	}
 
