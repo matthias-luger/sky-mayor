@@ -14,7 +14,7 @@ func InitElectionPeriodREST() {
 	router := gin.Default()
 	router.POST("/electionPeriod", postElectionPeriod)
 	router.GET("/electionPeriod/:year", getElectionPeriodByYear)
-	router.GET("/electionPeriods/:from/:to", getElectionPeriodsByTimespan)
+	router.GET("/electionPeriod/range/:from/:to/", getElectionPeriodsByTimespan)
 	router.Run("localhost:8080")
 }
 
