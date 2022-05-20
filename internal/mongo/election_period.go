@@ -11,7 +11,8 @@ import (
 )
 
 func InsertElectionPeriod(electionPeriod *model.ElectionPeriod) error {
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*30)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
 
 	electionPeriod.ID = primitive.NewObjectID()
 
@@ -26,7 +27,8 @@ func InsertElectionPeriod(electionPeriod *model.ElectionPeriod) error {
 }
 
 func InsertElectionPeriods(electionPeriods []*model.ElectionPeriod) error {
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*30)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
 
 	var insertList []interface{}
 	for i := 0; i < len(electionPeriods); i++ {
@@ -45,7 +47,8 @@ func InsertElectionPeriods(electionPeriods []*model.ElectionPeriod) error {
 }
 
 func UpdateElectionPeriod(electionPeriod *model.ElectionPeriod) error {
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*30)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
 
 	_, err := electionPeriodCollection.ReplaceOne(ctx, bson.D{{"_id", electionPeriod.ID}}, electionPeriod)
 
@@ -59,9 +62,15 @@ func UpdateElectionPeriod(electionPeriod *model.ElectionPeriod) error {
 }
 
 func GetElectionPeriodByYear(year int) (*model.ElectionPeriod, error) {
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*30)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
 
-	cur, err := electionPeriodCollection.Find(ctx, bson.D{{"year", year}})
+	cur, err := electionPeriodCollection.Find(ctx, bson.M{
+		"$and": []bson.M{
+			{"year": year},
+			{"limit": 1},
+		},
+	})
 
 	if err != nil {
 		log.Error().Err(err).Msgf("error finding election period for year %d", year)
@@ -88,7 +97,8 @@ func GetElectionPeriodByYear(year int) (*model.ElectionPeriod, error) {
 }
 
 func GetElectionPeriodsByTimespan(from int64, to int64) ([]*model.ElectionPeriod, error) {
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*30)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
 
 	cur, err := electionPeriodCollection.Find(ctx, bson.M{
 		"$and": []bson.M{

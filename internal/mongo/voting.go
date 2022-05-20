@@ -12,7 +12,8 @@ import (
 )
 
 func InsertVoting(voting *model.Voting) error {
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*30)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
 
 	voting.ID = primitive.NewObjectID()
 
@@ -27,9 +28,11 @@ func InsertVoting(voting *model.Voting) error {
 }
 
 func GetLastVoting() (*model.Voting, error) {
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*30)
 
-	cur, err := votingCollection.Find(ctx, bson.D{}, options.Find().SetSort(bson.D{{"$natural", -1}}))
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+
+	cur, err := votingCollection.Find(ctx, bson.D{}, options.Find().SetSort(bson.D{{"timestamp", -1}}).SetLimit(1))
 
 	if err != nil {
 		log.Error().Err(err).Msgf("error finding voting data")
