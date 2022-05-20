@@ -8,6 +8,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func InsertElectionPeriod(electionPeriod *model.ElectionPeriod) error {
@@ -65,12 +66,7 @@ func GetElectionPeriodByYear(year int) (*model.ElectionPeriod, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 	defer cancel()
 
-	cur, err := electionPeriodCollection.Find(ctx, bson.M{
-		"$and": []bson.M{
-			{"year": year},
-			{"limit": 1},
-		},
-	})
+	cur, err := electionPeriodCollection.Find(ctx, bson.D{{"year", year}}, options.Find().SetLimit(1))
 
 	if err != nil {
 		log.Error().Err(err).Msgf("error finding election period for year %d", year)

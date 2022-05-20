@@ -5,8 +5,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/joho/godotenv"
-	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -18,16 +16,10 @@ var (
 )
 
 func Init() error {
-
-	err := godotenv.Load()
-	if err != nil {
-		log.Warn().Err(err)
-	}
-
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	client, err = mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MONGO_URL")))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(os.Getenv("MONGO_URL")))
 
 	if err != nil {
 		return err

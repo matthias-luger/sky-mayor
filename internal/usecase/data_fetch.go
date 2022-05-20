@@ -171,10 +171,7 @@ func FetchFromHypixelApi() (*model.ApiElectionResponse, error) {
 		log.Error().Err(getErr).Msgf("Error fetching data from %s", url)
 		return nil, err
 	}
-
-	if res.Body != nil {
-		defer res.Body.Close()
-	}
+	defer res.Body.Close()
 
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
