@@ -1,7 +1,9 @@
 package usecase
 
 import (
+	"context"
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -34,7 +36,12 @@ func Fetch() error {
 		return err
 	}
 
-	if isApiDataAlreadyPresent(apiResponse) {
+	isPresent, err := isApiDataAlreadyPresent(apiResponse)
+	if err != nil {
+		return err
+	}
+
+	if isPresent {
 		log.Info().Msg("api data is already present, retry in 5min")
 		return nil
 	}
@@ -128,8 +135,9 @@ func updateWinnerOfLastYear(apiResponse *model.ApiElectionResponse) error {
 	}
 
 	lastElectionPeriod.Winner = winner
-	mongo.UpdateElectionPeriod(lastElectionPeriod)
-	return nil
+
+	// return error or nil
+	return mongo.UpdateElectionPeriod(lastElectionPeriod)
 }
 
 func getCandidatesFromApiCandidates(apiCandidates []*model.ApiCandidates) []*model.Candidate {
@@ -145,12 +153,16 @@ func getCandidatesFromApiCandidates(apiCandidates []*model.ApiCandidates) []*mod
 	return candidates
 }
 
-func isApiDataAlreadyPresent(apiResponseData *model.ApiElectionResponse) bool {
-	lastVoting, _ := mongo.GetLastVoting()
-	if lastVoting == nil {
-		return false
+func isApiDataAlreadyPresent(apiResponseData *model.ApiElectionResponse) (bool, error) {
+	lastVoting, err := mongo.GetLastVoting()
+	if err != nil {
+		log.Error().Err(err).Msg("error getting lat votes")
+		return false, err
 	}
-	return lastVoting.Timestamp.Unix() == apiResponseData.LastUpdated/1000
+	if lastVoting == nil {
+		return false, nil
+	}
+	return lastVoting.Timestamp.Unix() == apiResponseData.LastUpdated/1000, nil
 }
 
 func FetchFromHypixelApi() (*model.ApiElectionResponse, error) {
@@ -159,8 +171,10 @@ func FetchFromHypixelApi() (*model.ApiElectionResponse, error) {
 	client := http.Client{
 		Timeout: time.Second * 5,
 	}
+	ctx, timeout := context.WithTimeout(context.Background(), time.Second*10)
+	defer timeout()
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		log.Error().Err(err).Msg("Error creating request")
 		return nil, err
@@ -171,7 +185,12 @@ func FetchFromHypixelApi() (*model.ApiElectionResponse, error) {
 		log.Error().Err(getErr).Msgf("Error fetching data from %s", url)
 		return nil, err
 	}
-	defer res.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Error().Err(err).Msgf("error reading body from hypixel body")
+		}
+	}(res.Body)
 
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
