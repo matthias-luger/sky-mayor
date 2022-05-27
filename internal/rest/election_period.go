@@ -10,6 +10,17 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+// @Summary Get election periods by timespan
+// @Description Returns all election periods that took place in a given timespan
+// @Tags Election periods
+// @Accept */*
+// @Produce json
+// @Param from path int true "from The beginning of the selected timespan"
+// @Param to path int true "The end of the selected timespan"
+// @Success 200 {object} []model.ElectionPeriod
+// @Failure 400 {object} nil
+// @Failure 404 {object} nil
+// @Router /electionPeriod/range/:from/:to/ [get]
 func getElectionPeriodsByTimespan(c *gin.Context) {
 	fromParam := c.Param("from")
 	toParam := c.Param("to")
@@ -34,6 +45,16 @@ func getElectionPeriodsByTimespan(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, electionPeriod)
 }
 
+// @Summary Get the election period of a certain year
+// @Description Returns the election periods that took place in a given year
+// @Tags Election periods
+// @Accept */*
+// @Produce json
+// @Param year path int true "the searched year"
+// @Success 200 {object} model.ElectionPeriod
+// @Failure 400 {object} nil
+// @Failure 404 {object} nil
+// @Router /electionPeriod/:year [get]
 func getElectionPeriodByYear(c *gin.Context) {
 	yearParam := c.Param("year")
 
@@ -52,6 +73,15 @@ func getElectionPeriodByYear(c *gin.Context) {
 
 }
 
+// @Summary Inserts election periods
+// @Description Endpoint to insert election periods, should only be used to insert missing/hisotical data
+// @Tags Election periods
+// @Accept */*
+// @Produce json
+// @Param periods body []model.ElectionPeriod true "the election periods that are going to be inserted"
+// @Success 201 {object} []model.ElectionPeriod
+// @Failure 400 {object} nil
+// @Router /electionPeriod [post]
 func postElectionPeriod(c *gin.Context) {
 
 	var newElectionPeriods = []*model.ElectionPeriod{}

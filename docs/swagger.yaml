@@ -1,0 +1,132 @@
+basePath: /
+definitions:
+  model.Candidate:
+    properties:
+      key:
+        type: string
+      name:
+        type: string
+      perks:
+        items:
+          $ref: '#/definitions/model.Perk'
+        type: array
+    type: object
+  model.ElectionPeriod:
+    properties:
+      candidates:
+        items:
+          $ref: '#/definitions/model.Candidate'
+        type: array
+      end:
+        type: string
+      id:
+        type: string
+      start:
+        type: string
+      winner:
+        $ref: '#/definitions/model.Candidate'
+      year:
+        type: integer
+    type: object
+  model.Perk:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is the API for the Mayor votings
+  termsOfService: http://swagger.io/terms/
+  title: Mayor API
+  version: "1.0"
+paths:
+  /electionPeriod:
+    post:
+      consumes:
+      - '*/*'
+      description: Endpoint to insert election periods, should only be used to insert
+        missing/hisotical data
+      parameters:
+      - description: the election periods that are going to be inserted
+        in: body
+        name: periods
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/model.ElectionPeriod'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/model.ElectionPeriod'
+            type: array
+        "400":
+          description: Bad Request
+      summary: Inserts election periods
+      tags:
+      - Election periods
+  /electionPeriod/:year:
+    get:
+      consumes:
+      - '*/*'
+      description: Returns the election periods that took place in a given year
+      parameters:
+      - description: the searched year
+        in: path
+        name: year
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ElectionPeriod'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Get the election period of a certain year
+      tags:
+      - Election periods
+  /electionPeriod/range/:from/:to/:
+    get:
+      consumes:
+      - '*/*'
+      description: Returns all election periods that took place in a given timespan
+      parameters:
+      - description: from The beginning of the selected timespan
+        in: path
+        name: from
+        required: true
+        type: integer
+      - description: The end of the selected timespan
+        in: path
+        name: to
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.ElectionPeriod'
+            type: array
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Get election periods by timespan
+      tags:
+      - Election periods
+swagger: "2.0"
