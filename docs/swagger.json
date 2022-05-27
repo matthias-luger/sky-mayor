@@ -53,45 +53,7 @@
                 }
             }
         },
-        "/electionPeriod/:year": {
-            "get": {
-                "description": "Returns the election periods that took place in a given year",
-                "consumes": [
-                    "*/*"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Election periods"
-                ],
-                "summary": "Get the election period of a certain year",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "the searched year",
-                        "name": "year",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.ElectionPeriod"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "404": {
-                        "description": "Not Found"
-                    }
-                }
-            }
-        },
-        "/electionPeriod/range/:from/:to/": {
+        "/electionPeriod/range/{from}/{to}/": {
             "get": {
                 "description": "Returns all election periods that took place in a given timespan",
                 "consumes": [
@@ -128,6 +90,44 @@
                             "items": {
                                 "$ref": "#/definitions/model.ElectionPeriod"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/electionPeriod/{year}": {
+            "get": {
+                "description": "Returns the election periods that took place in a given year",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Election periods"
+                ],
+                "summary": "Get the election period of a certain year",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "the searched year",
+                        "name": "year",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ElectionPeriod"
                         }
                     },
                     "400": {

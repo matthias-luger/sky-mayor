@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} []model.ElectionPeriod
 // @Failure 400 {object} nil
 // @Failure 404 {object} nil
-// @Router /electionPeriod/range/:from/:to/ [get]
+// @Router /electionPeriod/range/{from}/{to}/ [get]
 func getElectionPeriodsByTimespan(c *gin.Context) {
 	fromParam := c.Param("from")
 	toParam := c.Param("to")
@@ -54,7 +54,7 @@ func getElectionPeriodsByTimespan(c *gin.Context) {
 // @Success 200 {object} model.ElectionPeriod
 // @Failure 400 {object} nil
 // @Failure 404 {object} nil
-// @Router /electionPeriod/:year [get]
+// @Router /electionPeriod/{year} [get]
 func getElectionPeriodByYear(c *gin.Context) {
 	yearParam := c.Param("year")
 
