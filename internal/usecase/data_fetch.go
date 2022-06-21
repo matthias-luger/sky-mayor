@@ -54,6 +54,10 @@ func Fetch() error {
 		})
 	}
 
+	if apiResponse.Current.Year == 0 || len(votes) == 0 {
+		metrics.InvalidMayorData()
+	}
+
 	err = mongo.InsertVoting(&model.Voting{
 		Year:      apiResponse.Current.Year,
 		Votes:     votes,
