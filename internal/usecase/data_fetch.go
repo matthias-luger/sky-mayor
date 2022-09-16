@@ -36,10 +36,13 @@ func Fetch() error {
 		return err
 	}
 
-	isPresent, err := isApiDataAlreadyPresent(apiResponse)
+	lastVoting, err := mongo.GetLastVoting()
 	if err != nil {
+		log.Error().Err(err).Msg("error getting last votes")
 		return err
 	}
+
+	isPresent := isApiDataAlreadyPresent(apiResponse, lastVoting)
 
 	if isPresent {
 		log.Info().Msg("api data is already present, retry in 5min")
@@ -55,7 +58,8 @@ func Fetch() error {
 	}
 
 	if apiResponse.Current.Year == 0 || len(votes) == 0 {
-		metrics.InvalidMayorData()
+		log.Info().Msg("year is 0 -> currently no election")
+		return nil
 	}
 
 	err = mongo.InsertVoting(&model.Voting{
@@ -157,16 +161,11 @@ func getCandidatesFromApiCandidates(apiCandidates []*model.ApiCandidates) []*mod
 	return candidates
 }
 
-func isApiDataAlreadyPresent(apiResponseData *model.ApiElectionResponse) (bool, error) {
-	lastVoting, err := mongo.GetLastVoting()
-	if err != nil {
-		log.Error().Err(err).Msg("error getting lat votes")
-		return false, err
-	}
+func isApiDataAlreadyPresent(apiResponseData *model.ApiElectionResponse, lastVoting *model.Voting) bool {
 	if lastVoting == nil {
-		return false, nil
+		return false
 	}
-	return lastVoting.Timestamp.Unix() == apiResponseData.LastUpdated/1000, nil
+	return lastVoting.Timestamp.Unix() == apiResponseData.LastUpdated/1000
 }
 
 func FetchFromHypixelApi() (*model.ApiElectionResponse, error) {
