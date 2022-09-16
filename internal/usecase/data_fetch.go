@@ -60,13 +60,13 @@ func Fetch() error {
 	if apiResponse.Current.Year == 0 || len(votes) == 0 {
 		log.Info().Msg("year is 0 -> currently no election")
 		return nil
-	} else {
-		err = mongo.InsertVoting(&model.Voting{
-			Year:      apiResponse.Current.Year,
-			Votes:     votes,
-			Timestamp: time.Unix(apiResponse.LastUpdated/1000, 0),
-		})
 	}
+
+	err = mongo.InsertVoting(&model.Voting{
+		Year:      apiResponse.Current.Year,
+		Votes:     votes,
+		Timestamp: time.Unix(apiResponse.LastUpdated/1000, 0),
+	})
 
 	if err != nil {
 		log.Error().Err(err).Msg("Error inserting voting data")
