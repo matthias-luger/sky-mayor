@@ -7,13 +7,13 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
-// @title Mayor API
-// @version 1.0
-// @description This is the API for the Mayor votings
-// @termsOfService http://swagger.io/terms/
+// @title           Mayor API
+// @version         1.0
+// @description     This is the API for the Mayor votings
+// @termsOfService  http://swagger.io/terms/
 
-// @host localhost:8080
-// @BasePath /
+// @host      localhost:8080
+// @BasePath  /
 func Init() error {
 	router := gin.Default()
 

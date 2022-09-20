@@ -104,12 +104,14 @@ paths:
       description: Returns all election periods that took place in a given timespan
       parameters:
       - description: from The beginning of the selected timespan
-        in: path
+        format: int64
+        in: query
         name: from
         required: true
         type: integer
       - description: The end of the selected timespan
-        in: path
+        format: int64
+        in: query
         name: to
         required: true
         type: integer
