@@ -76,16 +76,18 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
+                        "format": "int64",
                         "description": "from The beginning of the selected timespan",
                         "name": "from",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     },
                     {
                         "type": "integer",
+                        "format": "int64",
                         "description": "The end of the selected timespan",
                         "name": "to",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     }
                 ],
