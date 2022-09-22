@@ -60,7 +60,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/electionPeriod/range/{from}/{to}/": {
+        "/electionPeriod/range": {
             "get": {
                 "description": "Returns all election periods that took place in a given timespan",
                 "consumes": [

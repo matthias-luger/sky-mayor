@@ -20,7 +20,7 @@ import (
 // @Success      200   {object}  []model.ElectionPeriod
 // @Failure      400   {object}  nil
 // @Failure      404   {object}  nil
-// @Router       /electionPeriod/range/{from}/{to}/ [get]
+// @Router       /electionPeriod/range [get]
 func getElectionPeriodsByTimespan(c *gin.Context) {
 	fromParam := c.Query("from")
 	toParam := c.Query("to")

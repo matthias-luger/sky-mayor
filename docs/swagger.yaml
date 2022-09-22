@@ -97,7 +97,7 @@ paths:
       summary: Get the election period of a certain year
       tags:
       - Election periods
-  /electionPeriod/range/{from}/{to}/:
+  /electionPeriod/range:
     get:
       consumes:
       - '*/*'
