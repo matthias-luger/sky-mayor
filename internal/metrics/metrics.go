@@ -23,11 +23,6 @@ var (
 		Name: "sky_mayor_errors",
 		Help: "Count of errors",
 	})
-
-	invalidMayorDataCounter = promauto.NewCounter(prometheus.CounterOpts{
-		Name: "sky_mayor_invalid_data",
-		Help: "Count of invalid mayor data",
-	})
 )
 
 func Init() error {
@@ -41,10 +36,6 @@ func VotingInserted() {
 
 func ElectionPeriodInserted() {
 	electionPeriodInsertCounter.Inc()
-}
-
-func InvalidMayorData() {
-	invalidMayorDataCounter.Inc()
 }
 
 func AddError() {
