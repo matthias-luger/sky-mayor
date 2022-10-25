@@ -58,6 +58,7 @@ func Fetch() error {
 	}
 
 	if apiResponse.Current.Year == 0 || len(votes) == 0 {
+		metrics.VotingInserted()
 		log.Info().Msg("year is 0 -> currently no election")
 		return nil
 	}
