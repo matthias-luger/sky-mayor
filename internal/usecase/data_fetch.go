@@ -186,7 +186,7 @@ func FetchFromHypixelApi() (*model.ApiElectionResponse, error) {
 	res, getErr := client.Do(req)
 	if getErr != nil {
 		log.Error().Err(getErr).Msgf("Error fetching data from %s", url)
-		return nil, err
+		return nil, getErr
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
