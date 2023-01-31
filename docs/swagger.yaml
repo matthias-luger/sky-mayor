@@ -131,4 +131,23 @@ paths:
       summary: Get election periods by timespan
       tags:
       - Election periods
+  /mayor/current:
+    get:
+      consumes:
+      - '*/*'
+      description: Returns the current mayor
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Candidate'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Get the current mayor
+      tags:
+      - Mayor
 swagger: "2.0"

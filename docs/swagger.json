@@ -140,6 +140,35 @@
                     }
                 }
             }
+        },
+        "/mayor/current": {
+            "get": {
+                "description": "Returns the current mayor",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mayor"
+                ],
+                "summary": "Get the current mayor",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Candidate"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
         }
     },
     "definitions": {
