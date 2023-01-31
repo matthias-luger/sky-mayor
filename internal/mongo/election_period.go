@@ -144,3 +144,41 @@ func GetCurrentElectionPeriod() (*model.ElectionPeriod, error) {
 
 	return result, nil
 }
+
+func GetAllMayorNames() ([]string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+
+	cursor, err := electionPeriodCollection.Aggregate(ctx, []bson.M{
+		{
+			"$unwind": "$candidates",
+		},
+		{
+			"$group": bson.M{
+				"_id": "$candidates.name",
+			},
+		},
+	})
+
+	if err != nil {
+		log.Error().Err(err).Msgf("error finding mayors")
+		return nil, err
+	}
+
+	var results []string
+	var result bson.M
+	for cursor.Next(ctx) {
+		err := cursor.Decode(&result)
+		if err != nil {
+			log.Error().Err(err).Msgf("error decoding mayor name")
+			continue
+		}
+		if result["_id"] != nil {
+			results = append(results, result["_id"].(string))
+		}
+	}
+
+	log.Info().Msg("successfully found all distinct mayor names")
+
+	return results, nil
+}
