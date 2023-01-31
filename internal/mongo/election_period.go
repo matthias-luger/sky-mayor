@@ -125,3 +125,22 @@ func GetElectionPeriodsByTimespan(from int64, to int64) ([]*model.ElectionPeriod
 
 	return resultList, nil
 }
+
+func GetCurrentElectionPeriod() (*model.ElectionPeriod, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+
+	var result = &model.ElectionPeriod{}
+
+	opts := options.FindOne().SetSort(bson.D{{"year", -1}})
+	err := electionPeriodCollection.FindOne(ctx, bson.D{}, opts).Decode(result)
+
+	if err != nil {
+		log.Error().Err(err).Msgf("error finding current election period")
+		return nil, err
+	}
+
+	log.Info().Msgf("successfully found current election period %d", result.Year)
+
+	return result, nil
+}

@@ -59,6 +59,18 @@ func Fetch() error {
 
 	if apiResponse.Current.Year == 0 || len(votes) == 0 {
 		metrics.VotingInserted()
+		lastElectionPeriod, _ := mongo.GetElectionPeriodByYear(apiResponse.Mayor.Election.Year)
+		if lastElectionPeriod != nil && lastElectionPeriod.Winner == nil {
+			lastElectionPeriod.Winner = &model.Candidate{
+				Name:  apiResponse.Mayor.Name,
+				Key:   apiResponse.Mayor.Key,
+				Perks: apiResponse.Mayor.Perks,
+			}
+			if err = mongo.UpdateElectionPeriod(lastElectionPeriod); err != nil {
+				log.Error().Err(err).Msgf("Error updating winner of last year (%d)", apiResponse.Mayor.Election.Year)
+				return err
+			}
+		}
 		log.Info().Msg("year is 0 -> currently no election")
 		return nil
 	}
