@@ -19,8 +19,8 @@ import (
 func getCurrentMayor(c *gin.Context) {
 	electionPeriod, _ := mongo.GetCurrentElectionPeriod()
 	if electionPeriod == nil {
-		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "election period not found"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "election period not found"})
 		return
 	}
-	c.IndentedJSON(http.StatusOK, electionPeriod.Winner)
+	c.JSON(http.StatusOK, electionPeriod.Winner)
 }
