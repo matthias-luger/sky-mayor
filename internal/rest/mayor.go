@@ -12,9 +12,9 @@ import (
 // @Tags         Mayor
 // @Accept       */*
 // @Produce      json
-// @Success      200   {object}  model.Candidate
-// @Failure      400   {object}  nil
-// @Failure      404   {object}  nil
+// @Success      200  {object}  model.Candidate
+// @Failure      400  {object}  nil
+// @Failure      404  {object}  nil
 // @Router       /mayor/current [get]
 func getCurrentMayor(c *gin.Context) {
 	electionPeriod, _ := mongo.GetCurrentElectionPeriod()
