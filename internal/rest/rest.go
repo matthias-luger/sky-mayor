@@ -20,6 +20,7 @@ func Init() error {
 	router.GET("/electionPeriod/:year", getElectionPeriodByYear)
 	router.GET("/electionPeriod/range", getElectionPeriodsByTimespan)
 	router.GET("/mayor/current", getCurrentMayor)
+	router.GET("/mayor/next", getNextMayor)
 	router.GET("/api/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, ginSwagger.URL("http://localhost:8080/api/doc.json")))
 	return router.Run()
 }
