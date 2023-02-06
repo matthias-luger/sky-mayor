@@ -22,6 +22,7 @@ import (
 // @Failure      404   {object}  nil
 // @Router       /electionPeriod/range [get]
 func getElectionPeriodsByTimespan(c *gin.Context) {
+	c.Writer.Header().Set("Cache-Control", "public, max-age=300")
 	fromParam := c.Query("from")
 	toParam := c.Query("to")
 
@@ -56,6 +57,7 @@ func getElectionPeriodsByTimespan(c *gin.Context) {
 // @Failure      404   {object}  nil
 // @Router       /electionPeriod/{year} [get]
 func getElectionPeriodByYear(c *gin.Context) {
+	c.Writer.Header().Set("Cache-Control", "public, max-age=300")
 	yearParam := c.Param("year")
 
 	year, err := strconv.Atoi(yearParam)
