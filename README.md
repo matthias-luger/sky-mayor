@@ -17,5 +17,3 @@ Service to store the voting and result of the mayor elections.
 ### Configuration
 
 See .env.dist
-
-
