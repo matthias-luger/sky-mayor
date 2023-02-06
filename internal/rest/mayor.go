@@ -37,6 +37,7 @@ func getCurrentMayor(c *gin.Context) {
 // @Failure      404  {object}  nil
 // @Router       /mayor/names [get]
 func GetAllMayorNames(c *gin.Context) {
+	c.Writer.Header().Set("Cache-Control", "public, max-age=300")
 	names, _ := mongo.GetAllMayorNames()
 	if names == nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no mayors found"})
