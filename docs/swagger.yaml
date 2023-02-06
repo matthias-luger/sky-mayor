@@ -171,4 +171,24 @@ paths:
       summary: Get names of all mayors
       tags:
       - Mayor
+  /mayor/next:
+    get:
+      consumes:
+      - '*/*'
+      description: Returns the mayor with the most votes in the current election.
+        If there is currently no election, this returns null.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Candidate'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Get the next mayor
+      tags:
+      - Mayor
 swagger: "2.0"

@@ -208,6 +208,35 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/mayor/next": {
+            "get": {
+                "description": "Returns the mayor with the most votes in the current election. If there is currently no election, this returns null.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mayor"
+                ],
+                "summary": "Get the next mayor",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Candidate"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
         }
     },
     "definitions": {
