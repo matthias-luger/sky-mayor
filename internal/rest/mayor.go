@@ -20,7 +20,7 @@ import (
 // @Failure      404  {object}  nil
 // @Router       /mayor/current [get]
 func getCurrentMayor(c *gin.Context) {
-
+	c.Writer.Header().Set("Cache-Control", "public, max-age=300")
 	lastFetchResult := usecase.GetLastFetchResult()
 	if lastFetchResult == nil {
 		fetchResult, err := usecase.FetchFromHypixelApi()
@@ -44,6 +44,7 @@ func getCurrentMayor(c *gin.Context) {
 // @Failure      404  {object}  nil
 // @Router       /mayor/next [get]
 func getNextMayor(c *gin.Context) {
+	c.Writer.Header().Set("Cache-Control", "public, max-age=300")
 
 	lastVoting, err := mongo.GetLastVoting()
 	if err != nil {
