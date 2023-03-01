@@ -6,6 +6,7 @@ import (
 
 	"github.com/Coflnet/sky-mayor/internal/model"
 	"github.com/Coflnet/sky-mayor/internal/mongo"
+	"github.com/Coflnet/sky-mayor/internal/usecase"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,12 +21,17 @@ import (
 // @Router       /mayor/current [get]
 func getCurrentMayor(c *gin.Context) {
 	c.Writer.Header().Set("Cache-Control", "public, max-age=300")
-	electionPeriod, _ := mongo.GetCurrentElectionPeriod()
-	if electionPeriod == nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": "election period not found"})
+	lastFetchResult := usecase.GetLastFetchResult()
+	if lastFetchResult == nil {
+		fetchResult, err := usecase.FetchFromHypixelApi()
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": err})
+		}
+
+		c.JSON(http.StatusOK, fetchResult.Mayor.Name)
 		return
 	}
-	c.JSON(http.StatusOK, electionPeriod.Winner)
+	c.JSON(http.StatusOK, lastFetchResult.Mayor.Name)
 }
 
 // @Summary      Get the next mayor
