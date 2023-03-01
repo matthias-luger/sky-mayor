@@ -34,6 +34,25 @@ func getCurrentMayor(c *gin.Context) {
 	c.JSON(http.StatusOK, lastFetchResult.Mayor.Name)
 }
 
+// @Summary      Get names of all mayors
+// @Description  Returns all mayor names
+// @Tags         Mayor
+// @Accept       */*
+// @Produce      json
+// @Success      200  {object}  []string
+// @Failure      400  {object}  nil
+// @Failure      404  {object}  nil
+// @Router       /mayor/names [get]
+func GetAllMayorNames(c *gin.Context) {
+	c.Writer.Header().Set("Cache-Control", "public, max-age=300")
+	names, _ := mongo.GetAllMayorNames()
+	if names == nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "no mayors found"})
+		return
+	}
+	c.JSON(http.StatusOK, names)
+}
+
 // @Summary      Get the next mayor
 // @Description  Returns the mayor with the most votes in the current election. If there is currently no election, this returns null.
 // @Tags         Mayor

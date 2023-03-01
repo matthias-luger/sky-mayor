@@ -170,6 +170,38 @@
                 }
             }
         },
+        "/mayor/names": {
+            "get": {
+                "description": "Returns all mayor names",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mayor"
+                ],
+                "summary": "Get names of all mayors",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
         "/mayor/next": {
             "get": {
                 "description": "Returns the mayor with the most votes in the current election. If there is currently no election, this returns null.",

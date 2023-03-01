@@ -150,6 +150,27 @@ paths:
       summary: Get the current mayor
       tags:
       - Mayor
+  /mayor/names:
+    get:
+      consumes:
+      - '*/*'
+      description: Returns all mayor names
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+      summary: Get names of all mayors
+      tags:
+      - Mayor
   /mayor/next:
     get:
       consumes:
