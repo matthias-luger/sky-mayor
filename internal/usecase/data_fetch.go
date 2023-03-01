@@ -15,6 +15,7 @@ import (
 )
 
 var currYear int
+var lastFetch *model.ApiElectionResponse
 
 func StartFetch() {
 	if err := Fetch(); err != nil {
@@ -31,6 +32,7 @@ func StartFetch() {
 
 func Fetch() error {
 	apiResponse, err := FetchFromHypixelApi()
+	lastFetch = apiResponse
 
 	if err != nil {
 		return err
@@ -223,4 +225,8 @@ func FetchFromHypixelApi() (*model.ApiElectionResponse, error) {
 	}
 
 	return apiResponse, nil
+}
+
+func GetLastFetchResult() *model.ApiElectionResponse {
+	return lastFetch
 }
