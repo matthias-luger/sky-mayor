@@ -26,12 +26,20 @@ func getCurrentMayor(c *gin.Context) {
 		fetchResult, err := usecase.FetchFromHypixelApi()
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": err})
+			return
 		}
-
-		c.JSON(http.StatusOK, fetchResult.Mayor.Name)
+		c.JSON(http.StatusOK, model.Candidate{
+			Key:   fetchResult.Mayor.Key,
+			Name:  fetchResult.Mayor.Name,
+			Perks: fetchResult.Mayor.Perks,
+		})
 		return
 	}
-	c.JSON(http.StatusOK, lastFetchResult.Mayor.Name)
+	c.JSON(http.StatusOK, model.Candidate{
+		Key:   lastFetchResult.Mayor.Key,
+		Name:  lastFetchResult.Mayor.Name,
+		Perks: lastFetchResult.Mayor.Perks,
+	})
 }
 
 // @Summary      Get names of all mayors
