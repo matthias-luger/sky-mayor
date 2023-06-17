@@ -150,7 +150,7 @@ const docTemplate = `{
         },
         "/mayor/current": {
             "get": {
-                "description": "Returns the current mayor",
+                "description": "Returns the name of the current mayor",
                 "consumes": [
                     "*/*"
                 ],
@@ -160,19 +160,42 @@ const docTemplate = `{
                 "tags": [
                     "Mayor"
                 ],
-                "summary": "Get the current mayor",
+                "summary": "Get the name of the current mayor",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Candidate"
+                            "type": "string"
                         }
                     },
                     "400": {
                         "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/mayor/last": {
+            "get": {
+                "description": "Returns the name of the last mayor",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mayor"
+                ],
+                "summary": "Get the name of the last mayor",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
                     },
-                    "404": {
-                        "description": "Not Found"
+                    "400": {
+                        "description": "Bad Request"
                     }
                 }
             }

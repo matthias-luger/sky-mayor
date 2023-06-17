@@ -145,6 +145,23 @@ func GetCurrentElectionPeriod() (*model.ElectionPeriod, error) {
 	return result, nil
 }
 
+func GetPreviouslyElectedMayor() (*model.Candidate, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+
+	var result = &model.ElectionPeriod{}
+
+	opts := options.FindOne().SetSort(bson.M{"end": -1})
+	err := electionPeriodCollection.FindOne(ctx, bson.M{"end": bson.M{"$lt": time.Now()}}, opts).Decode(result)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Debug().Msgf("%d", result.Year)
+
+	return result.Winner, nil
+}
+
 func GetAllMayorNames() ([]string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 	defer cancel()

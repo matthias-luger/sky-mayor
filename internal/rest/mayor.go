@@ -10,14 +10,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary      Get the current mayor
-// @Description  Returns the current mayor
+// @Summary      Get the name of the current mayor
+// @Description  Returns the name of the current mayor
 // @Tags         Mayor
 // @Accept       */*
 // @Produce      json
-// @Success      200  {object}  model.Candidate
+// @Success      200  {object}  string
 // @Failure      400  {object}  nil
-// @Failure      404  {object}  nil
 // @Router       /mayor/current [get]
 func getCurrentMayor(c *gin.Context) {
 	c.Writer.Header().Set("Cache-Control", "public, max-age=300")
@@ -32,6 +31,24 @@ func getCurrentMayor(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, lastFetchResult.Mayor.Name)
+}
+
+// @Summary      Get the name of the last mayor
+// @Description  Returns the name of the last mayor
+// @Tags         Mayor
+// @Accept       */*
+// @Produce      json
+// @Success      200  {object}  string
+// @Failure      400  {object}  nil
+// @Router       /mayor/last [get]
+func getLastMayor(c *gin.Context) {
+	c.Writer.Header().Set("Cache-Control", "public, max-age=300")
+	mayor, err := mongo.GetPreviouslyElectedMayor()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusOK, mayor.Name)
 }
 
 // @Summary      Get names of all mayors
