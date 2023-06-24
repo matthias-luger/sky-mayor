@@ -10,12 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary      Get the name of the current mayor
+// @Summary      Get the the current mayor
 // @Description  Returns the name of the current mayor
 // @Tags         Mayor
 // @Accept       */*
 // @Produce      json
-// @Success      200  {object}  string
+// @Success      200  {object}  model.Candidate
 // @Failure      400  {object}  nil
 // @Router       /mayor/current [get]
 func getCurrentMayor(c *gin.Context) {

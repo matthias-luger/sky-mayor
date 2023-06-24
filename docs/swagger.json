@@ -153,12 +153,12 @@
                 "tags": [
                     "Mayor"
                 ],
-                "summary": "Get the name of the current mayor",
+                "summary": "Get the the current mayor",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/model.Candidate"
                         }
                     },
                     "400": {
