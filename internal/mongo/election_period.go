@@ -98,8 +98,8 @@ func GetElectionPeriodsByTimespan(from int64, to int64) ([]*model.ElectionPeriod
 
 	cur, err := electionPeriodCollection.Find(ctx, bson.M{
 		"$and": []bson.M{
-			{"start": bson.M{"$gte": time.Unix(from, 0)}},
-			{"end": bson.M{"$lte": time.Unix(to, 0)}},
+			{"end": bson.M{"$gte": time.Unix(from, 0)}},
+			{"start": bson.M{"$lte": time.Unix(to, 0)}},
 		},
 	})
 

@@ -11,7 +11,7 @@ import (
 )
 
 // @Summary      Get election periods by timespan
-// @Description  Returns all election periods that took place in a given timespan
+// @Description  Returns all election periods that (fully or partially) took place in a given timespan
 // @Tags         Election periods
 // @Accept       */*
 // @Produce      json
