@@ -1,10 +1,10 @@
 # generates the c# client
-VERSION=0.1.0
+VERSION=0.3.1
 NAME=Coflnet.Sky.Mayor.Client
 
 docker run --rm -v "${PWD}:/local" --network host -u $(id -u ${USER}):$(id -g ${USER})  openapitools/openapi-generator-cli generate \
 -i /local/swagger.json \
--g csharp-netcore \
+-g csharp \
 -o /local/out --additional-properties=packageName=$NAME,packageVersion=$VERSION,licenseId=MIT
 
 cd out
