@@ -38,9 +38,9 @@ func getElectionPeriodsByTimespan(c *gin.Context) {
 		return
 	}
 
-	electionPeriod, _ := mongo.GetElectionPeriodsByTimespan(from/1000, to/1000)
-	if electionPeriod == nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": "election period not found"})
+	electionPeriod, err := mongo.GetElectionPeriodsByTimespan(from/1000, to/1000)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 	c.JSON(http.StatusOK, electionPeriod)
