@@ -56,6 +56,10 @@ func getLastMayor(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
+	if mayor == nil {
+		c.JSON(http.StatusOK, nil)
+		return
+	}
 	c.JSON(http.StatusOK, mayor.Name)
 }
 
