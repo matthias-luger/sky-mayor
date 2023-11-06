@@ -27,6 +27,10 @@ func getCurrentMayor(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{"message": err})
 			return
 		}
+		if fetchResult == nil || &fetchResult.Mayor == nil {
+			c.JSON(http.StatusNotFound, gin.H{"message": "no current mayor found"})
+			return
+		}
 		c.JSON(http.StatusOK, model.Candidate{
 			Key:   fetchResult.Mayor.Key,
 			Name:  fetchResult.Mayor.Name,
