@@ -103,7 +103,7 @@ func getNextMayor(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 	}
 	if time.Since(lastVoting.Timestamp) > 5*time.Minute {
-		c.JSON(http.StatusNotFound, nil)
+		c.JSON(http.StatusNoContent, nil)
 		return
 	}
 	if lastVoting == nil {
