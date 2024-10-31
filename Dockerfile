@@ -1,17 +1,32 @@
-FROM golang:1.21.2-bullseye as builder
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-WORKDIR /build
+# Container we use for final publish
+FROM mcr.microsoft.com/dotnet/core/aspnet:8.0-buster-slim AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
 
-COPY go.mod go.sum ./
+# Build container
+FROM mcr.microsoft.com/dotnet/core/sdk:8.0-buster AS build
 
-RUN go mod download
+# Copy the code into the container
+WORKDIR /src
+COPY ["src/Coflnet.Sky.Mayor/Coflnet.Sky.Mayor.csproj", "Coflnet.Sky.Mayor/"]
 
-COPY . .
+# NuGet restore
+RUN dotnet restore "Coflnet.Sky.Mayor/Coflnet.Sky.Mayor.csproj"
+COPY ["src/Coflnet.Sky.Mayor/", "Coflnet.Sky.Mayor/"]
 
-RUN go build -o ./app cmd/sky-mayor/main.go
+# Build the API
+WORKDIR "Coflnet.Sky.Mayor"
+RUN dotnet build "Coflnet.Sky.Mayor.csproj" -c Release -o /app/build
 
-FROM gcr.io/distroless/base-debian11
+# Publish it
+FROM build AS publish
+RUN dotnet publish "Coflnet.Sky.Mayor.csproj" -c Release -o /app/publish
 
-COPY --from=builder /build/app /app
-
-ENTRYPOINT ["/app"]
+# Make the final image for publishing
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Coflnet.Sky.Mayor.dll"]
